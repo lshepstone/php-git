@@ -37,6 +37,8 @@ class Git
     public function setRepositoryClass($class)
     {
         $this->repositoryClass = (string) $class;
+
+        return $this;
     }
 
     public function __call($method, $arguments)
@@ -58,7 +60,7 @@ class Git
                 throw new RuntimeException("'git {$method}' is not supported");
         }
 
-        return call_user_func_array($method, $arguments);
+        return call_user_func_array(array($this, $method), $arguments);
     }
 
     protected function invokeOpen($path)
@@ -67,7 +69,7 @@ class Git
             throw new RuntimeException("{$this->repositoryClass} is not a valid repository class");
         }
 
-        return new Repository($path, $this);
+        return new $this->repositoryClass($path, $this);
     }
 
     protected function invokeClone($url, $path)
