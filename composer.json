@@ -17,7 +17,8 @@
         "lshepstone/php-proc": "@dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "3.7.*",
+        "dantudor/mockfs": "dev-master"
     },
     "autoload":    {
         "psr-0": {

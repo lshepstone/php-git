@@ -9,7 +9,6 @@ class GitTest_Repository extends \PhpGit\Repository
 {
     public function __construct()
     {
-
     }
 }
 
@@ -134,5 +133,25 @@ class GitTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\PhpGit\Exception\RuntimeException', "'git {$command}' is not supported");
 
         $git->$command();
+    }
+
+    public function testOpenReturnsRepository()
+    {
+        $root = 'repos';
+        $target = 'php-git';
+        $path = "mfs://{$root}/{$target}";
+
+        $mockFs = new \MockFs\MockFs();
+        $mockFs->getFileSystem()
+            ->addDirectory($root)
+            ->addDirectory($target, $root)
+            ->addDirectory('.git', "/{$root}/{$target}");
+
+        $git = new Git('/usr/bin/git', new Process());
+
+        $repository = $git->open($path);
+
+        $this->assertSame($path, $repository->getPath());
+        $this->assertSame($git, $repository->getGit());
     }
 }
