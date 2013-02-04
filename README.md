@@ -10,5 +10,5 @@ use \PhpGit\Git;
 use \PhpProc\Process;
 
 $git = new Git('/usr/bin/git', new Process());
-$repository = $git->clone('https://github.com/lshepstone/php-git.git', php-git');
+$repository = $git->clone('https://github.com/lshepstone/php-git.git', 'php-git');
 ```
