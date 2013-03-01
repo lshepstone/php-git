@@ -2,13 +2,13 @@
 
 namespace PhpGit\Exception;
 
-use PhpGit\Exception;
+use PhpGit\ExceptionInterface;
 
 /**
  * RuntimeException
  *
  * {@inheritDoc}
  */
-class RuntimeException extends \RuntimeException implements Exception
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 }

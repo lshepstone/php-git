@@ -4,6 +4,7 @@ namespace PhpGit;
 
 use PhpProc\Process;
 use PhpGit\Exception\RuntimeException;
+use PhpGit\Exception\RepoNotFoundException;
 
 /**
  * Git
@@ -84,7 +85,9 @@ class Git
      * Sets the class to be used for repository instances.
      *
      * @param string $class Class to be used
+     *
      * @return Git Fluent interface
+     *
      * @throws Exception\RuntimeException
      */
     public function setRepositoryClass($class)
@@ -99,11 +102,25 @@ class Git
     }
 
     /**
+     * Determines if a Git repo exists at a given directory path.
+     *
+     * @param $path Directory path to existing repo
+     *
+     * @return boolean
+     */
+    public function repoExists($path)
+    {
+        return is_dir($path . '/.git');
+    }
+
+    /**
      * Method overloading to support calling Git commands directly on an instance.
      *
      * @param string $command Git command to call
      * @param array $arguments Arguments to pass to the method supporting the command
+     *
      * @return mixed Returns the result of the method supporting the Git command
+     *
      * @throws Exception\RuntimeException
      */
     public function __call($command, $arguments)
@@ -117,6 +134,10 @@ class Git
                 $method = 'invokeOpen';
                 break;
 
+            case 'pull':
+                $method = 'invokePull';
+                break;
+
             default:
                 throw new RuntimeException("'git {$command}' is not supported");
         }
@@ -128,9 +149,10 @@ class Git
      * Opens an existing repository at the specified file path.
      *
      * @param $path File path of the repository to open
+     *
      * @return Repository
      */
-    protected function invokeOpen($path)
+    public function invokeOpen($path)
     {
         return new $this->repositoryClass($path, $this);
     }
@@ -140,10 +162,12 @@ class Git
      *
      * @param string $url URL to remote repository to clone
      * @param string $path File path to clone the repository to
+     *
      * @return Repository
+     *
      * @throws Exception\RuntimeException
      */
-    protected function invokeClone($url, $path)
+    public function invokeClone($url, $path)
     {
         $result = $this->process
             ->setCommand("{$this->path} clone \"{$url}\" \"{$path}\"")
@@ -154,5 +178,31 @@ class Git
         }
 
         return $this->invokeOpen($path);
+    }
+
+    /**
+     * Pulls changes from the default remote of an existing local repository.
+     *
+     * @param string $path Path to the local repository
+     *
+     * @return Repository
+     *
+     * @throws Exception\RuntimeException
+     * @throws Exception\RepositoryNotFoundException
+     */
+    public function invokePull($path)
+    {
+        if (false === $this->repoExists($path)) {
+            throw new RepoNotFoundException("No Git repository was found at '{$path}'");
+        }
+
+        $result = $this->process
+            ->setWorkingDirectory($path)
+            ->setCommand("{$this->path} pull")
+            ->execute();
+
+        if ($result->hasErrors()) {
+            throw new RuntimeException("Failed to pull at {$path}: {$result->getStdErrContents()}");
+        }
     }
 }

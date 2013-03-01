@@ -3,10 +3,10 @@
 namespace PhpGit;
 
 /**
- * Exception
+ * ExceptionInterface
  *
  * Interface for all PhpGit exception classes.
  */
-interface Exception
+interface ExceptionInterface
 {
 }

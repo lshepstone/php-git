@@ -3,7 +3,7 @@
 namespace PhpGit;
 
 use PhpGit\Git;
-use PhpGit\Exception\RuntimeException;
+use PhpGit\Exception\RepoNotFoundException;
 
 /**
  * Repository
@@ -35,8 +35,8 @@ class Repository
      */
     public function __construct($path, Git $git)
     {
-        if (false === is_dir("{$path}/.git")) {
-            throw new RuntimeException("No Git repository found at {$path}");
+        if (false === $git->repoExists($path)) {
+            throw new RepoNotFoundException("No Git repository found at {$path}");
         }
 
         $this->path = (string) $path;
@@ -61,5 +61,13 @@ class Repository
     public function getGit()
     {
         return $this->git;
+    }
+
+    /**
+     * Pulls from the default remote repository.
+     */
+    public function pull()
+    {
+        $this->git->pull($this->path);
     }
 }
