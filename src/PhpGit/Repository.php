@@ -2,7 +2,6 @@
 
 namespace PhpGit;
 
-use PhpGit\Git;
 use PhpGit\Exception\RepoNotFoundException;
 
 /**
@@ -30,7 +29,7 @@ class Repository
      * Constructs a new instance.
      *
      * @param $path File path to this repository
-     * @param Git $git Git instance used to execute commands in context of the repository.
+     * @param  Git                        $git Git instance used to execute commands in context of the repository.
      * @throws Exception\RuntimeException
      */
     public function __construct($path, Git $git)

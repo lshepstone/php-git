@@ -2,7 +2,6 @@
 
 namespace PhpGit;
 
-use PhpGit\Git;
 use PhpProc\Process;
 use MockFs\MockFs;
 

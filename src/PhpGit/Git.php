@@ -42,7 +42,7 @@ class Git
     /**
      * Constructs a new instance.
      *
-     * @param string $path Path to the Git binary
+     * @param string           $path    Path to the Git binary
      * @param \PhpProc\Process $process Process instance to be used to execute Git commands.
      */
     public function __construct($path, Process $process)
@@ -116,8 +116,8 @@ class Git
     /**
      * Method overloading to support calling Git commands directly on an instance.
      *
-     * @param string $command Git command to call
-     * @param array $arguments Arguments to pass to the method supporting the command
+     * @param string $command   Git command to call
+     * @param array  $arguments Arguments to pass to the method supporting the command
      *
      * @return mixed Returns the result of the method supporting the Git command
      *
@@ -125,7 +125,7 @@ class Git
      */
     public function __call($command, $arguments)
     {
-        switch($command) {
+        switch ($command) {
             case 'clone':
                 $method = 'invokeClone';
                 break;
@@ -160,7 +160,7 @@ class Git
     /**
      * Clones a remote repository to the specified file path.
      *
-     * @param string $url URL to remote repository to clone
+     * @param string $url  URL to remote repository to clone
      * @param string $path File path to clone the repository to
      *
      * @return Repository
